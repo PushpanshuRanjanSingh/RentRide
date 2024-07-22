@@ -1,4 +1,4 @@
-package com.crio.codehackcontest.exception;
+package com.crio.rentread.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

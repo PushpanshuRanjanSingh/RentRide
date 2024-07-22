@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
             if (!book.getTitle().isEmpty()) uBook.setTitle(book.getTitle());
             if (!book.getAuthor().isEmpty()) uBook.setAuthor(book.getAuthor());
             if (!book.getGenre().isEmpty()) uBook.setGenre(book.getGenre());
-            if (book.isStatus()) uBook.setGenre(book.getGenre());
+            uBook.setStatus(book.isStatus());
             return bookRepository.save(uBook);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
@@ -61,7 +61,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(Long id) {
         if (bookRepository.findById(id).isPresent()) {
-            bookRepository.deleteById(id);
+             bookRepository.deleteById(id);
+             return true;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
     }
