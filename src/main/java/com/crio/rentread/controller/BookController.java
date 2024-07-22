@@ -56,15 +56,16 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         return ResponseEntity.ok(bookService.updateBook(id, book));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
+
 
     @PostMapping("/{bookId}/rent")
     public ResponseEntity<RentalBook> rentBook(@PathVariable Long bookId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -73,9 +74,25 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}/return")
-    public ResponseEntity<Void> returnBook(@PathVariable Long bookId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> returnBook(@PathVariable Long bookId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         User user = customUserDetails.getUser();
         rentalService.returnBook(bookId,user);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/rent")
+    public ResponseEntity<?> rentedBooks() {
+        return ResponseEntity.ok(rentalService.rentedBooks());
+    }
+
+    @GetMapping("/rent/{id}")
+    public ResponseEntity<?> rentedBookById(@PathVariable Long id) {
+        return ResponseEntity.ok(rentalService.rentedBookById(id));
+    }
+
+    @GetMapping("/rent/book/{id}")
+    public ResponseEntity<?> bookRentedToUser(@PathVariable Long id) {
+        return ResponseEntity.ok(rentalService.bookRentedToUser(id));
+    }
+
 }

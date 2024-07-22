@@ -1,6 +1,7 @@
 package com.crio.rentread.controller;
 
 import com.crio.rentread.entity.User;
+import com.crio.rentread.service.RentalService;
 import com.crio.rentread.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final RentalService rentalService;
 
     /**
      * It is used in Auth Controller as Registering User
@@ -42,6 +44,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/rental/{id}")
+    public ResponseEntity<?> userRentedBook(@PathVariable Long id) {
+        rentalService.userRentedBook(id);
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("/{id}")

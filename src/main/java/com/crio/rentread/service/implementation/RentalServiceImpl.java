@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,13 +31,36 @@ public class RentalServiceImpl implements RentalService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Book is not available to rent");
         rentalBook.setBook(book.get());
 
-        if (rentalBookRepository.countRentalBookByUserId(user.getId()) > 2)
+        if (rentalBookRepository.countRentalBookByUserId(user.getId()) >= 2)
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User has already 2 books");
         rentalBook.setUser(user);
 
         return rentalBookRepository.save(rentalBook);
     }
 
+    @Override
+    public List<RentalBook> rentedBooks() {
+        return rentalBookRepository.findAll();
+    }
+
+    @Override
+    public Object rentedBookById(Long id) {
+        if (rentalBookRepository.findById(id).isPresent())
+            return rentalBookRepository.findById(id);
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No record found");
+
+    }
+
+    @Override
+    public  void userRentedBook(Long id) {
+        System.out.println(rentalBookRepository.getRentalBookByUser_Id(id));
+    }
+
+    @Override
+    public Object bookRentedToUser(Long id) {
+        return rentalBookRepository.findRentalBookByBook_Id(id);
+    }
 
     @Override
     public boolean returnBook(Long bookId, User user) {
@@ -44,8 +68,7 @@ public class RentalServiceImpl implements RentalService {
         if (book.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
         Optional<RentalBook> rentalBook = rentalBookRepository.findByUserAndBook(user, book.get());
-        if (rentalBook.isPresent())
-        {
+        if (rentalBook.isPresent()) {
             rentalBookRepository.deleteById(rentalBook.get().getId());
             return true;
         }

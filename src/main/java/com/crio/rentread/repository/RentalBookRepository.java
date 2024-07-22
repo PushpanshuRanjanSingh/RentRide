@@ -5,9 +5,12 @@ import com.crio.rentread.entity.RentalBook;
 import com.crio.rentread.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RentalBookRepository extends JpaRepository<RentalBook,Long> {
     int countRentalBookByUserId(Long user_id);
     Optional<RentalBook> findByUserAndBook(User user, Book book);
+    List<List<RentalBook>> getRentalBookByUser_Id(Long id);
+    Object findRentalBookByBook_Id(Long id);
 }
