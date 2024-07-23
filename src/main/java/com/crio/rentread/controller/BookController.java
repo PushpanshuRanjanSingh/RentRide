@@ -2,7 +2,6 @@ package com.crio.rentread.controller;
 
 import com.crio.rentread.entity.RentalBook;
 import com.crio.rentread.entity.User;
-import com.crio.rentread.model.CustomUserDetails;
 import com.crio.rentread.service.BookService;
 import com.crio.rentread.service.RentalService;
 import jakarta.validation.Valid;
@@ -56,7 +55,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         return ResponseEntity.ok(bookService.updateBook(id, book));
     }
 
@@ -67,14 +66,12 @@ public class BookController {
     }
 
     @PostMapping("/{bookId}/rent")
-    public ResponseEntity<RentalBook> rentBook(@PathVariable Long bookId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        User user = customUserDetails.getUser();
+    public ResponseEntity<RentalBook> rentBook(@PathVariable Long bookId, @AuthenticationPrincipal User user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(rentalService.takeBook(bookId, user));
     }
 
     @DeleteMapping("/{bookId}/return")
-    public ResponseEntity<Void> returnBook(@PathVariable Long bookId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        User user = customUserDetails.getUser();
+    public ResponseEntity<Void> returnBook(@PathVariable Long bookId, @AuthenticationPrincipal User user) {
         rentalService.returnBook(bookId,user);
         return ResponseEntity.noContent().build();
     }

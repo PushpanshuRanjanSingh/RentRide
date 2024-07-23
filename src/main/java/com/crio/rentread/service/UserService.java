@@ -4,7 +4,9 @@ import com.crio.rentread.entity.User;
 
 import java.util.List;
 
-public interface UserService {
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+public interface UserService extends UserDetailsService{
     User register(User user);
     User login(String email, String password);
     User update(Long id, User user);

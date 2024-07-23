@@ -2,7 +2,6 @@ package com.crio.rentread.entity;
 
 import com.crio.rentread.model.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

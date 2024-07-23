@@ -41,6 +41,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book saveBook(Book book) {
+        if (book.getTitle() == null || book.getTitle().isEmpty() ||
+                book.getAuthor() == null || book.getAuthor().isEmpty() ||
+                book.getGenre() == null || book.getGenre().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
+        }
         return bookRepository.save(book);
     }
 
@@ -49,9 +54,18 @@ public class BookServiceImpl implements BookService {
         Optional<Book> pBook = bookRepository.findById(id);
         if (pBook.isPresent()) {
             Book uBook = pBook.get();
-            if (!book.getTitle().isEmpty()) uBook.setTitle(book.getTitle());
-            if (!book.getAuthor().isEmpty()) uBook.setAuthor(book.getAuthor());
-            if (!book.getGenre().isEmpty()) uBook.setGenre(book.getGenre());
+            if (book.getTitle() != null && !book.getTitle().isEmpty()) {
+                uBook.setTitle(book.getTitle());
+            }
+
+            if (book.getAuthor() != null && !book.getAuthor().isEmpty()) {
+                uBook.setAuthor(book.getAuthor());
+            }
+
+            if (book.getGenre() != null && !book.getGenre().isEmpty()) {
+                uBook.setGenre(book.getGenre());
+            }
+
             uBook.setStatus(book.isStatus());
             return bookRepository.save(uBook);
         }
@@ -61,8 +75,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean deleteBook(Long id) {
         if (bookRepository.findById(id).isPresent()) {
-             bookRepository.deleteById(id);
-             return true;
+            bookRepository.deleteById(id);
+            return true;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
     }
